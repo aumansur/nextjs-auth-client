@@ -1,6 +1,15 @@
+"use client";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
-const Navbar = () => {
+type UserPros = {
+  user: {
+    name?: string | undefined;
+    email?: string | undefined;
+    image?: string | undefined;
+  };
+};
+const Navbar = ({ session }: { session: UserPros | null }) => {
   return (
     <div className="navbar bg-base-100  border-b  w-[90%] mx-auto">
       <div className="navbar-start">
@@ -11,8 +20,7 @@ const Navbar = () => {
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -23,8 +31,7 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li>
               <Link href="/">Home</Link>
             </li>
@@ -59,16 +66,21 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <button className="btn btn-error btn-outline text-white rounded-full px-5">
-          Logout
-        </button>
-
-        <Link
-          href="/login"
-          className="btn btn-accent btn-outline text-white rounded-full px-5"
-        >
-          Login
-        </Link>
+        {session?.user ? (
+          <button
+            onClick={() => {
+              signOut();
+            }}
+            className="btn btn-error btn-outline text-white rounded-full px-5">
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="btn btn-accent btn-outline text-white rounded-full px-5">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
